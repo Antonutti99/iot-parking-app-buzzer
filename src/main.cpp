@@ -4,8 +4,8 @@
 #include "EasyBuzzer.h"
 
 unsigned int frequency = 1000;  
-unsigned int onDuration = 300;
-unsigned int offDuration = 200;
+unsigned int onDuration = 50;
+unsigned int offDuration = 100;
 unsigned int beeps = 1;
 unsigned int pauseDuration = 500;
 unsigned int cycles = 1;
@@ -76,19 +76,21 @@ void callback(String topic, byte* message, unsigned int length) {
     dist = distPart;
   }
   if (topic=="ultrasonic/2"){
-    if ((dist < 5) && (offDuration != 0)){
-      offDuration = 0;
-      setBuzzer();
+    if (dist < 5){
+      EasyBuzzer.beep(1000);
     }
-    else if ((dist < 20) && (offDuration != 100)){
+    else if (dist < 20){
       offDuration = 100;
+      onDuration = 50;
       setBuzzer();
     }
-    else if ((dist < 40) && (offDuration != 200)){
-      offDuration = 200;
+    else if (dist < 40){
+      offDuration = 150;
+      onDuration = 50;
       setBuzzer();
     }else{
-      EasyBuzzer.stopBeep();
+      onDuration = 0;
+      setBuzzer();
     }
     Serial.println(dist);
   }
@@ -137,7 +139,7 @@ void setup() {
 
   EasyBuzzer.setPin(pin);
   setBuzzer();
-  beeps = 10;
+  beeps = 3;
 }
 
 void loop() {
